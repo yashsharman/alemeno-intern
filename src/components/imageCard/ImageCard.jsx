@@ -1,11 +1,17 @@
 import { Typography, Card, Grid, Box } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  completeCourse,
+  userCourseSelector,
+} from "../../reduxContainer/slices/userCourses";
 
 function ImageCard({ course, dashboard }) {
-  const [isCompleted, setCompleted] = useState(false);
-  const handleCompletation = () => {
-    setCompleted(true)
+  const userCourse = useSelector(userCourseSelector);
+  const dispatch = useDispatch();
+  const handleCompletation = (course) => {
+    const index = userCourse.indexOf(course);
+    dispatch(completeCourse({ index, course }));
   };
   return (
     <Grid item sx={{ width: "90%" }} py={2}>
@@ -52,7 +58,7 @@ function ImageCard({ course, dashboard }) {
               </Typography>
               {dashboard && (
                 <Box display={"flex"} py={2}>
-                  {isCompleted ? (
+                  {course.completed ? (
                     <Button variant="contained" disabled>
                       Completed
                     </Button>
@@ -60,23 +66,11 @@ function ImageCard({ course, dashboard }) {
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() => handleCompletation()}
+                      onClick={() => handleCompletation(course)}
                     >
                       Make as Complete
                     </Button>
                   )}
-                  {/* <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => handleCompletation()}
-                  >
-                    Make as Complete
-                  </Button>
-                  {course.completed && (
-                    <Button variant="contained" disabled>
-                      Completed
-                    </Button>
-                  )} */}
                 </Box>
               )}
             </Box>
